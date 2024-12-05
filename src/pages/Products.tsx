@@ -25,6 +25,7 @@ const Products = () => {
 
   const salvarProduto = async () => {
     try {
+      setIsLoading(true)
       const formData = new FormData();
       formData.append('file', productImage!); // Adiciona a imagem
       const uploadResponse = await api.post('/products/upload', formData, {
@@ -36,8 +37,11 @@ const Products = () => {
       await api.post('/products', { name: productName, imageUrl });
       setProductImage(null);
       fetchProducts();
+      setIsLoading(false)
     } catch (error: any) {
       console.error(error);
+      setIsLoading(false)
+
     }
   };
   const updateProduto = async () => {
@@ -64,13 +68,10 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      setIsLoading(true)
       const response = await api.get('/products');
       setProducts(response.data);
-      setIsLoading(false)
     } catch (error: any) {
       setErrorMsg(error.message)
-      setIsLoading(false)
     }
   };
 
@@ -87,12 +88,12 @@ const Products = () => {
       </Text>
       <VStack w={"600px"}>
         <Input placeholder='Nome do Produto' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} />
-        <Button w={"full"} onClick={() => { isToUpdate ? updateProduto() : salvarProduto() }} colorScheme='green' variant="solid">{isToUpdate ? "Atualizar" : "Adcionar"}</Button>
         <Input
           type="file"
           accept="image/*"
           onChange={(e) => setProductImage(e.target.files ? e.target.files[0] : null)}
         />
+           <Button isLoading={isLoading} isDisabled={productImage? false : true} w={"full"} onClick={() => { isToUpdate ? updateProduto() : salvarProduto() }} colorScheme='green' variant="solid">{isToUpdate ? "Atualizar" : "Adcionar"}</Button>
       </VStack>
       <Box>
         <Text fontSize="xl" mb={4}>Lista de Produtos</Text>
