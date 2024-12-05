@@ -96,7 +96,7 @@ const Products = () => {
       </VStack>
       <Box>
         <Text fontSize="xl" mb={4}>Lista de Produtos</Text>
-        {products.map((product: any) => (
+        {products?.map((product: any) => (
           <Flex key={product.id} justify="space-between" align="center" mb={4}>
             <Image mr={5}
               src={product.imageUrl}
