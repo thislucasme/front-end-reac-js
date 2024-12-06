@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react"
 import { Product } from "../models/ProductTdo";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 interface ProductContextType {
     products: Product[];
@@ -32,13 +33,20 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
     const [products, setProducts] = useState<Product[]>([]);
     const [productImage, setProductImage] = useState<File | null>(null);
     const [productName, setProductName] = useState<string>("");
+    const navigate = useNavigate();
 
     const fetchProducts = useCallback(async () => {
         try {
             const response = await api.get('/products');
             setProducts(response.data);
         } catch (error: any) {
-            console.error('Error fetching products:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.error('Not Authorized. Redirecting to login...');
+                navigate("/")
+            } else {
+                console.error('Error fetching products:', error);
+            }
         }
     }, []);
 

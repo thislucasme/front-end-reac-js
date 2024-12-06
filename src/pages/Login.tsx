@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, HStack, Input, Stack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Image, Input, Stack, Text, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-
+import AuthImage from '../resources/auth.svg'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ const Login = () => {
   return (
     <Box width="600px" margin="auto">
       <VStack p={10}>
-        <Text>Login</Text>
+        <Image w={"100px"} src={AuthImage}/>
         <Input placeholder='Email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input placeholder='Senha' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Button isLoading={isLoading} w={"full"} onClick={handleLogin} colorScheme="green">

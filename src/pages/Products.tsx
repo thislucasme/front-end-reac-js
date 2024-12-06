@@ -1,12 +1,15 @@
-import { Box, Button, Flex, Image, Input, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, IconButton, Image, Input, Spacer, Text, VStack } from '@chakra-ui/react';
 import { useContext, useEffect, useState } from 'react';
 import api from '../services/api';
 import { ProductContext } from '../contexts/ProductContext';
+import { useNavigate } from 'react-router-dom';
+import { FaSignOutAlt } from "react-icons/fa"
 
 const Products = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isToUpdate, setIsToUpdate] = useState(false)
   const [id, setId] = useState("")
+  const navigate = useNavigate()
 
   const {
     products, setProducts, salvarProducts,
@@ -38,9 +41,18 @@ const Products = () => {
 
   return (
     <VStack>
-      <Text fontSize="2xl" mb={4}>
+    <VStack>
+    <Text fontSize="2xl">
         Gerenciar Produtos
       </Text>
+      <Spacer/>
+      <IconButton size={"sm"} onClick={()=>{
+        localStorage.clear();
+        navigate("/")
+      }} aria-label="sair">
+  <FaSignOutAlt />
+</IconButton>
+    </VStack>
       <VStack w={"600px"}>
         <Input placeholder='Nome do Produto' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} />
         <Input

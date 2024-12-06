@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, HStack, Input, Stack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Image, Input, Stack, Text, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import RegisterImage from '../resources/signup.svg'
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -29,7 +30,7 @@ const Register = () => {
     return (
         <Box width="600px" margin="auto">
             <VStack p={10}>
-                <Text fontSize={"medium"}>Cadastro</Text>
+               <Image w={"100px"} src={RegisterImage}/>
                 <Input placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
                 <Input placeholder='Email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <Input placeholder='Password' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
