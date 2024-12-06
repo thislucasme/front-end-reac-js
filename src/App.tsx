@@ -7,8 +7,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
 import ProtectedRoute from "./componets/ProtectedRoute";
+import { ProductProvider } from "./contexts/ProductContext";
 export const App = () => (
-<ChakraProvider theme={theme}>
+  <ChakraProvider theme={theme}>
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -17,7 +18,9 @@ export const App = () => (
           path="/products"
           element={
             <ProtectedRoute>
-              <Products />
+              <ProductProvider>
+                <Products />
+              </ProductProvider>
             </ProtectedRoute>
           }
         />

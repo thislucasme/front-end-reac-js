@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Flex, HStack, Image, Input, Text, VStack } from '@chakra-ui/react';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Image, Input, Text, VStack } from '@chakra-ui/react';
+import { useContext, useEffect, useState } from 'react';
 import api from '../services/api';
-import ProductList from '../componets/ProductList';
+import { ProductContext } from '../contexts/ProductContext';
 
 const Products = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  //const [products, setProducts] = useState<any[]>([]);
   const [isFailure, setIsFailure] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string>()
-  const [productName, setProductName] = useState<string>("");
   const [isToUpdate, setIsToUpdate] = useState(false)
   const [id, setId] = useState("")
-  const [productImage, setProductImage] = useState<File | null>(null);
+
+  const {
+    products, setProducts, salvarProducts,
+    setProductImage, productImage, updateProducts,
+    productName, setProductName
+  } = useContext(ProductContext);
 
 
   const salvarProduto = async () => {
     try {
       setIsLoading(true)
-      const formData = new FormData();
-      formData.append('file', productImage!); // Adiciona a imagem
-      const uploadResponse = await api.post('/products/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      const imageUrl = uploadResponse.data.url;
-
-      await api.post('/products', { name: productName, imageUrl });
-      setProductImage(null);
-      fetchProducts();
+      salvarProducts()
       setIsLoading(false)
     } catch (error: any) {
       console.error(error);
@@ -46,11 +31,9 @@ const Products = () => {
   };
   const updateProduto = async () => {
     try {
-
-      await api.patch(`/products?id=${id}`, { name: productName });
+      updateProducts(id)
       setIsToUpdate(false)
       setProductName('');
-      fetchProducts();
     } catch (error: any) {
     }
   };
@@ -66,20 +49,7 @@ const Products = () => {
   };
 
 
-  const fetchProducts = async () => {
-    try {
-      const response = await api.get('/products');
-      setProducts(response.data);
-    } catch (error: any) {
-      setErrorMsg(error.message)
-    }
-  };
 
-  useEffect(() => {
-
-
-    fetchProducts();
-  }, []);
 
   return (
     <VStack>
@@ -93,7 +63,7 @@ const Products = () => {
           accept="image/*"
           onChange={(e) => setProductImage(e.target.files ? e.target.files[0] : null)}
         />
-           <Button isLoading={isLoading} isDisabled={productImage? false : true} w={"full"} onClick={() => { isToUpdate ? updateProduto() : salvarProduto() }} colorScheme='green' variant="solid">{isToUpdate ? "Atualizar" : "Adcionar"}</Button>
+        <Button isLoading={isLoading} isDisabled={productImage ? false : true} w={"full"} onClick={() => { isToUpdate ? updateProduto() : salvarProduto() }} colorScheme='green' variant="solid">{isToUpdate ? "Atualizar" : "Adcionar"}</Button>
       </VStack>
       <Box>
         <Text fontSize="xl" mb={4}>Lista de Produtos</Text>
