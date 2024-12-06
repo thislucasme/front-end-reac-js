@@ -4,10 +4,7 @@ import api from '../services/api';
 import { ProductContext } from '../contexts/ProductContext';
 
 const Products = () => {
-  //const [products, setProducts] = useState<any[]>([]);
-  const [isFailure, setIsFailure] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string>()
   const [isToUpdate, setIsToUpdate] = useState(false)
   const [id, setId] = useState("")
 
@@ -19,23 +16,14 @@ const Products = () => {
 
 
   const salvarProduto = async () => {
-    try {
-      setIsLoading(true)
-      salvarProducts()
-      setIsLoading(false)
-    } catch (error: any) {
-      console.error(error);
-      setIsLoading(false)
-
-    }
+    setIsLoading(true)
+    salvarProducts()
+    setIsLoading(false)
   };
   const updateProduto = async () => {
-    try {
-      updateProducts(id)
-      setIsToUpdate(false)
-      setProductName('');
-    } catch (error: any) {
-    }
+    updateProducts(id)
+    setIsToUpdate(false)
+    setProductName('');
   };
 
   const handleDelete = async (id: string) => {
@@ -47,9 +35,6 @@ const Products = () => {
       console.log(error);
     }
   };
-
-
-
 
   return (
     <VStack>
