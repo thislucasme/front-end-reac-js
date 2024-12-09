@@ -1,7 +1,8 @@
 import axios from 'axios';
-
+const url = process.env.REACT_APP_API_URL;
+console.log("URL:", url)
 const api = axios.create({
-  baseURL: 'http://165.154.213.121:3000',
+  baseURL: 'https://apitesteaddimition.online/',
 });
 
 api.interceptors.request.use(
