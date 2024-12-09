@@ -1,15 +1,14 @@
-import { Box, Button, Flex, HStack, IconButton, Image, Input, Spacer, Text, VStack } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
-import api from '../services/api';
+import { Box, Button, Flex, Image, Input, Spacer, Text, VStack } from '@chakra-ui/react';
+import { useContext, useState } from 'react';
+import { Logout } from '../componets/Logout';
 import { ProductContext } from '../contexts/ProductContext';
-import { useNavigate } from 'react-router-dom';
-import { FaSignOutAlt } from "react-icons/fa"
+import api from '../services/api';
+import { Empty } from '../componets/Empty';
 
 const Products = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isToUpdate, setIsToUpdate] = useState(false)
   const [id, setId] = useState("")
-  const navigate = useNavigate()
 
   const {
     products, setProducts, salvarProducts,
@@ -20,12 +19,12 @@ const Products = () => {
 
   const salvarProduto = async () => {
     setIsLoading(true)
-    salvarProducts()
+    await salvarProducts()
     setIsLoading(false)
   };
   const updateProduto = async () => {
     updateProducts(id)
-    setIsToUpdate(false)
+    await setIsToUpdate(false)
     setProductName('');
   };
 
@@ -41,18 +40,13 @@ const Products = () => {
 
   return (
     <VStack>
-    <VStack>
-    <Text fontSize="2xl">
-        Gerenciar Produtos
-      </Text>
-      <Spacer/>
-      <IconButton size={"sm"} onClick={()=>{
-        localStorage.clear();
-        navigate("/")
-      }} aria-label="sair">
-  <FaSignOutAlt />
-</IconButton>
-    </VStack>
+      <VStack>
+        <Text fontSize="2xl">
+          Gerenciar Produtos
+        </Text>
+        <Spacer />
+        <Logout />
+      </VStack>
       <VStack w={"600px"}>
         <Input placeholder='Nome do Produto' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} />
         <Input
@@ -63,8 +57,12 @@ const Products = () => {
         <Button isLoading={isLoading} isDisabled={productImage ? false : true} w={"full"} onClick={() => { isToUpdate ? updateProduto() : salvarProduto() }} colorScheme='green' variant="solid">{isToUpdate ? "Atualizar" : "Adcionar"}</Button>
       </VStack>
       <Box>
-        <Text fontSize="xl" mb={4}>Lista de Produtos</Text>
-        {products?.map((product: any) => (
+        {products.length <= 0 ? 
+        <>
+        <Empty/>
+        </>
+        :<>
+         {products?.map((product: any) => (
           <Flex key={product.id} justify="space-between" align="center" mb={4}>
             <Image mr={5}
               src={product.imageUrl}
@@ -88,6 +86,8 @@ const Products = () => {
             </Flex>
           </Flex>
         ))}
+        </>}
+       
       </Box>
     </VStack>
   );
